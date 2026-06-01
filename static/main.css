@@ -1,0 +1,94 @@
+:root {
+  --primary: #0d6efd;       /* Blue */
+  --primary-dark: #084298;  
+  --accent: #0077b6;       
+  --bg: #f9fafb;            
+  --card: #ffffff;          
+  --muted: #6b7280;         
+  --text: #111827;          
+  --border: #e5e7eb;
+}
+
+* {
+  margin: 0; padding: 0; box-sizing: border-box;
+  font-family: "Segoe UI", Roboto, sans-serif;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+}
+body, html { overflow-x: hidden !important; }
+
+.app-header {
+  background: var(--primary);
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 24px;
+  position: sticky; top: 0; z-index: 10;
+}
+
+.app-brand {
+  display: flex; align-items: center; gap: 10px;
+}
+.app-brand h1 { font-size: 20px; font-weight: 600; }
+
+.app-nav {
+  display: flex; align-items: center; gap: 20px;
+}
+.app-nav a {
+  color: white; text-decoration: none; font-weight: 500;
+  transition: opacity 0.2s;
+}
+.app-nav a:hover { opacity: 0.8; }
+.search-input {
+  padding: 6px 10px; border-radius: 6px; border: none;
+}
+
+.container {
+  max-width: 1100px; margin: 30px auto; padding: 0 16px;
+}
+
+.card {
+  background: var(--card);
+  padding: 20px; margin-bottom: 20px;
+  border-radius: 12px;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.05);
+}
+
+.upload-btn, .feature-card button {
+  background: var(--primary);
+  color: #fff; border: none; border-radius: 8px;
+  padding: 10px 16px; font-size: 14px; cursor: pointer;
+  transition: background 0.2s;
+}
+.upload-btn:hover { background: var(--primary-dark); }
+
+.features {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px; margin-top: 20px;
+}
+.feature-card {
+  background: var(--bg); padding: 16px;
+  border-radius: 10px; border: 1px solid var(--border);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.feature-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.08);
+}
+
+.site-footer {
+  text-align: center; font-size: 14px; color: var(--muted);
+  padding: 14px;
+}
+
+.chat-message {
+  margin: 8px 0; padding: 12px; border-radius: 10px; max-width: 70%;
+}
+.chat-user { background: #dbeafe; margin-left:auto; }
+.chat-assistant { background: #f3f4f6; }
