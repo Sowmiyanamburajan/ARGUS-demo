@@ -1,0 +1,29 @@
+flask
+numpy
+opencv-python
+Pillow
+imagehash
+librosa
+soundfile
+matplotlib
+scipy
+torch
+torchvision
+timm
+pandas
+scikit-learn
+python-multipart
+tqdm
+chart-studio
+textblob
+Flask
+pillow
+imagehash
+joblib
+speechrecognition        # optional for STT
+webrtcvad                # optional
+face-recognition         # for face detection and recognition
+pytesseract             # for OCR and document analysis
+seaborn                 # for enhanced visualizations
+requests                # for API calls
+
