@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ARGUS — Video Detection</title>
+  <link rel="stylesheet" href="/static/main.css">
+  <style>
+    .container { max-width: 900px; margin: 20px auto; padding: 20px; background: #fff;
+                 border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+    .metric { display: inline-block; margin: 8px; padding: 12px; background: #f4f4f4;
+              border-radius: 8px; min-width: 120px; text-align: center; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>ARGUS — Video Detection</h1>
+
+    <form id="uploadVideoForm">
+      <input type="file" id="videoFile" name="file" accept="video/*">
+      <button type="submit">Analyze</button>
+    </form>
+
+    <div id="videoPreview"></div>
+    <div id="videoResult" style="display:none;">
+      <h2>Analysis Result</h2>
+      <video id="videoPlayer" controls style="max-width:100%;border-radius:10px"></video>
+      <div id="videoMetrics"></div>
+      <h3>Findings</h3>
+      <ul id="findings"></ul>
+    </div>
+  </div>
+
+  <script>
+    const videoInput = document.getElementById("videoFile");
+    const videoPreview = document.getElementById("videoPreview");
+    const videoResult = document.getElementById("videoResult");
+    const videoPlayer = document.getElementById("videoPlayer");
+
+    videoInput.addEventListener("change", () => {
+      const file = videoInput.files[0];
+      if (file) {
+        const url = URL.createObjectURL(file);
+        videoPreview.innerHTML = `<video src="${url}" controls style="max-width:100%;border-radius:8px"></video>`;
+      }
+    });
+
+    document.getElementById("uploadVideoForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const file = videoInput.files[0];
+      if (!file) return alert("Please select a video!");
+
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const res = await fetch("/analyze/video", { method: "POST", body: formData });
+      const data = await res.json();
+
+      videoResult.style.display = "block";
+      videoPlayer.src = data.video_path;
+
+      document.getElementById("videoMetrics").innerHTML = `
+        <div class="metric">Frames<br><b>${data.frames_analyzed}</b></div>
+        <div class="metric">Confidence<br><b>${data.confidence}%</b></div>
+        <div class="metric">Temporal<br><b>${data.temporal_score}%</b></div>
+        <div class="metric">Processing<br><b>${data.processing_time}ms</b></div>
+      `;
+
+      const findings = document.getElementById("findings");
+      findings.innerHTML = "";
+      if (data.findings && data.findings.length) {
+        data.findings.forEach(f => {
+          findings.innerHTML += `<li>${f}</li>`;
+        });
+      } else {
+        findings.innerHTML = "<li>No suspicious findings.</li>";
+      }
+    });
+  </script>
+</body>
+</html>

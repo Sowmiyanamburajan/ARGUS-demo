@@ -1,0 +1,1476 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>ARGUS Cyber Forensics</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/static/main.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        font-family: "Inter", sans-serif;
+      }
+
+      .gradient-bg {
+        background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
+      }
+
+      .glass-effect {
+        background: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(59, 130, 246, 0.2);
+        box-shadow: 0 8px 32px rgba(59, 130, 246, 0.1);
+      }
+
+      .floating-animation {
+        animation: float 6s ease-in-out infinite;
+      }
+
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateY(0px);
+        }
+        50% {
+          transform: translateY(-20px);
+        }
+      }
+
+      .fade-in {
+        animation: fadeIn 0.8s ease-out;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .slide-in-left {
+        animation: slideInLeft 0.8s ease-out;
+      }
+
+      @keyframes slideInLeft {
+        from {
+          opacity: 0;
+          transform: translateX(-50px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+
+      .pulse-glow {
+        animation: pulseGlow 2s ease-in-out infinite alternate;
+      }
+
+      @keyframes pulseGlow {
+        from {
+          box-shadow: 0 0 20px rgba(59, 130, 246, 0.4);
+        }
+        to {
+          box-shadow: 0 0 40px rgba(59, 130, 246, 0.8);
+        }
+      }
+
+      .hover-lift {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      .hover-lift:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 20px 40px rgba(59, 130, 246, 0.2);
+      }
+
+      .gradient-text {
+        background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .card-shadow {
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+          0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      }
+
+      .card-shadow:hover {
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+          0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      }
+
+      /* Tab Styles */
+      .tab-button {
+        background: #f3f4f6;
+        color: #374151;
+        transition: all 0.3s ease;
+      }
+
+      .tab-button.active {
+        background: #3b82f6;
+        color: white;
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+      }
+
+      .tab-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .tab-content {
+        transition: all 0.3s ease;
+      }
+
+      /* Chat Styles */
+      .chat-message {
+        padding: 16px 20px;
+        border-radius: 16px;
+        max-width: 85%;
+        animation: messageSlide 0.3s ease-out;
+        position: relative;
+      }
+
+      .chat-user {
+        background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
+        color: white;
+        margin-left: auto;
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+      }
+
+      .chat-assistant {
+        background: #ffffff;
+        color: #111827;
+        border: 1px solid #e5e7eb;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .chat-advice {
+        background: rgba(34, 197, 94, 0.1);
+        color: #059669;
+        border: 1px solid rgba(34, 197, 94, 0.3);
+        box-shadow: 0 4px 12px rgba(34, 197, 94, 0.1);
+      }
+
+      @keyframes messageSlide {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+    </style>
+  </head>
+  <body class="bg-gray-50 min-h-screen">
+    <!-- HEADER -->
+    <header class="glass-effect sticky top-0 z-50">
+      <div class="container mx-auto px-6 py-4">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-4 slide-in-left">
+            <div class="relative">
+              <img
+                src="/static/logo.png"
+                alt="ARGUS"
+                class="w-12 h-12 rounded-xl shadow-lg"
+              />
+              <div
+                class="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full animate-pulse"
+              ></div>
+            </div>
+            <div>
+              <h1 class="text-2xl font-bold gradient-text">ARGUS</h1>
+              <p class="text-sm text-gray-600">Cyber Forensics</p>
+            </div>
+          </div>
+          <nav class="hidden md:flex items-center gap-8 text-gray-600">
+            <a
+              href="/"
+              class="hover:text-blue-600 transition-colors duration-300 font-medium"
+              >Home</a
+            >
+            <a
+              href="/chat"
+              class="hover:text-blue-600 transition-colors duration-300 font-medium"
+              >AI Assistant</a
+            >
+            <a
+              href="/dashboard"
+              class="hover:text-blue-600 transition-colors duration-300 font-medium"
+              >Dashboard</a
+            >
+            <a
+              href="/reports"
+              class="hover:text-blue-600 transition-colors duration-300 font-medium"
+              >Reports</a
+            >
+          </nav>
+          <div class="flex items-center gap-4">
+            <div class="relative">
+              <input
+                id="search"
+                placeholder="Search..."
+                class="px-4 py-2 rounded-xl bg-gray-100 text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300 w-64 border border-gray-200"
+              />
+              <div class="absolute right-3 top-1/2 transform -translate-y-1/2">
+                <svg
+                  class="w-5 h-5 text-gray-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                  ></path>
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- MAIN -->
+    <main class="container mx-auto px-6 py-12">
+      <!-- Hero Section -->
+      <div class="text-center mb-16 fade-in">
+        <div
+          class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-50 border border-blue-200 mb-6"
+        >
+          <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+          <span class="text-sm font-medium text-blue-700"
+            >Advanced AI Detection System</span
+          >
+        </div>
+        <h1 class="text-5xl md:text-6xl font-bold mb-6">
+          <span class="gradient-text">ARGUS</span>
+          <span class="block text-3xl md:text-4xl text-gray-700 font-light"
+            >Cyber Forensics</span
+          >
+        </h1>
+        <p class="text-xl text-gray-600 max-w-3xl mx-auto mb-8 leading-relaxed">
+          Advanced multi-modal deepfake detection with 97.8% accuracy. Protect
+          authenticity with real-time screening across images, videos, audio,
+          and documents.
+          <br /><strong>Now featuring:</strong> Voice-Face Identity
+          Verification, Emotion Manipulation Detection, Provenance Checking,
+          Explainable AI Output, and Fake Document Detection.
+        </p>
+      </div>
+
+      <!-- Tabbed Navigation -->
+      <div
+        class="glass-effect rounded-3xl p-8 md:p-12 card-shadow hover-lift fade-in mb-8"
+      >
+        <div class="flex flex-wrap justify-center mb-8">
+          <button
+            onclick="showTab('home')"
+            id="tab-home"
+            class="tab-button active px-6 py-3 mx-2 mb-2 rounded-xl font-semibold transition-all duration-300"
+          >
+            🏠 Home
+          </button>
+          <button
+            onclick="showTab('assistant')"
+            id="tab-assistant"
+            class="tab-button px-6 py-3 mx-2 mb-2 rounded-xl font-semibold transition-all duration-300"
+          >
+            🤖 AI Assistant
+          </button>
+          <button
+            onclick="showTab('dashboard')"
+            id="tab-dashboard"
+            class="tab-button px-6 py-3 mx-2 mb-2 rounded-xl font-semibold transition-all duration-300"
+          >
+            📊 Dashboard
+          </button>
+          <button
+            onclick="showTab('reports')"
+            id="tab-reports"
+            class="tab-button px-6 py-3 mx-2 mb-2 rounded-xl font-semibold transition-all duration-300"
+          >
+            📋 Reports
+          </button>
+        </div>
+
+        <!-- Tab Content -->
+        <div id="tab-content">
+          <!-- Home Tab Content -->
+          <div id="content-home" class="tab-content active">
+            <div class="text-center mb-8">
+              <h2 class="text-3xl font-bold mb-4 gradient-text">
+                Advanced Cybercrime Detection
+              </h2>
+              <p class="text-gray-600 text-lg max-w-2xl mx-auto">
+                Upload image, video, audio, or document for comprehensive
+                forensic analysis. Get detailed results with explainable AI
+                insights and cross-modal verification.
+              </p>
+            </div>
+
+            <!-- Upload Section -->
+            <form
+              id="analyzeForm"
+              class="relative"
+              action="/analyze"
+              method="post"
+              enctype="multipart/form-data"
+            >
+              <div
+                class="border-2 border-dashed border-blue-300 rounded-2xl p-12 text-center hover:border-blue-500 transition-all duration-300 hover:bg-blue-50"
+              >
+                <div class="floating-animation mb-6">
+                  <div
+                    class="w-20 h-20 mx-auto bg-gradient-to-br from-blue-500 to-blue-700 rounded-2xl flex items-center justify-center shadow-lg"
+                  >
+                    <svg
+                      class="w-10 h-10 text-white"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+                      ></path>
+                    </svg>
+                  </div>
+                </div>
+
+                <input
+                  type="file"
+                  id="fileUpload"
+                  name="file"
+                  multiple
+                  required
+                  class="hidden"
+                />
+
+                <button
+                  type="button"
+                  id="chooseBtn"
+                  class="px-8 py-4 bg-gradient-to-r from-blue-500 to-blue-700 rounded-xl font-semibold text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 pulse-glow"
+                >
+                  📂 Choose File(s) (Images, Videos, Audio, Documents)
+                </button>
+                <div
+                  id="selectedFiles"
+                  class="mt-4 text-gray-500 text-sm"
+                ></div>
+
+                <!-- Text input for consistency checking -->
+                <div class="mt-6">
+                  <label
+                    for="textInput"
+                    class="block text-sm font-medium text-gray-700 mb-2"
+                  >
+                    Optional: Enter text description for cross-modal consistency
+                    check
+                  </label>
+                  <textarea
+                    id="textInput"
+                    name="text"
+                    rows="3"
+                    placeholder="Describe the content or provide context for the uploaded media..."
+                    class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                  ></textarea>
+                </div>
+
+                <button
+                  type="submit"
+                  class="mt-8 px-12 py-4 bg-gradient-to-r from-green-500 to-blue-600 rounded-xl font-bold text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 flex items-center gap-2 mx-auto"
+                >
+                  <svg
+                    class="w-5 h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M13 10V3L4 14h7v7l9-11h-7z"
+                    ></path>
+                  </svg>
+                  Analyze Now
+                </button>
+              </div>
+            </form>
+
+            <!-- Behavior Sample Section -->
+            <div
+              class="flex flex-col md:flex-row justify-between items-center gap-6 mt-12 p-6 bg-blue-50 rounded-2xl border border-blue-200"
+            >
+              <button
+                class="px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-700 rounded-xl font-medium text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 flex items-center gap-2"
+                onclick="sendBehaviorSample('guest')"
+              >
+                <svg
+                  class="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                  ></path>
+                </svg>
+                Send Typing/Mouse Sample
+              </button>
+              <div class="text-gray-600 text-sm">
+                Need help?
+                <button
+                  onclick="showTab('assistant')"
+                  class="text-blue-600 hover:text-blue-700 underline font-medium transition-colors"
+                >
+                  Ask ARGUS assistant
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- AI Assistant Tab Content -->
+          <div id="content-assistant" class="tab-content hidden">
+            <div class="text-center mb-8">
+              <h2 class="text-3xl font-bold mb-4 gradient-text">
+                AI Assistant & Sentiment Analysis
+              </h2>
+              <p class="text-gray-600 text-lg max-w-2xl mx-auto">
+                Chat with ARGUS AI assistant for real-time sentiment analysis,
+                voice-to-text conversion, and forensic analysis support.
+              </p>
+            </div>
+
+            <!-- Chat Interface -->
+            <div class="bg-white rounded-2xl p-6 shadow-lg">
+              <div
+                id="chat-history"
+                class="h-96 overflow-y-auto mb-4 p-4 bg-gray-50 rounded-xl border"
+              >
+                <div class="chat-message chat-assistant mb-4">
+                  <div class="flex items-center gap-3 mb-2">
+                    <div
+                      class="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center"
+                    >
+                      <svg
+                        class="w-5 h-5 text-white"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
+                        ></path>
+                      </svg>
+                    </div>
+                    <div>
+                      <h3 class="text-lg font-semibold text-gray-800">
+                        ARGUS Assistant
+                      </h3>
+                      <p class="text-sm text-gray-600">
+                        AI-powered forensic analysis companion
+                      </p>
+                    </div>
+                  </div>
+                  <p class="text-gray-700">
+                    Hello! I'm here to help you with deepfake detection,
+                    forensic analysis, and sentiment analysis. You can type or
+                    use voice input. How can I assist you today?
+                  </p>
+                </div>
+              </div>
+
+              <div class="flex gap-2">
+                <input
+                  type="text"
+                  id="chat-input"
+                  placeholder="Ask me anything about deepfake detection or upload files for analysis..."
+                  class="flex-1 px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+                <button
+                  id="send-chat"
+                  class="px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-700 text-white rounded-xl font-semibold hover:shadow-lg transition-all duration-300"
+                >
+                  Send
+                </button>
+                <button
+                  id="voice-btn"
+                  class="px-4 py-3 bg-gradient-to-r from-green-500 to-green-700 text-white rounded-xl font-semibold hover:shadow-lg transition-all duration-300"
+                  title="Voice Input"
+                >
+                  🎤
+                </button>
+                <button
+                  id="upload-chat-btn"
+                  class="px-4 py-3 bg-gradient-to-r from-purple-500 to-purple-700 text-white rounded-xl font-semibold hover:shadow-lg transition-all duration-300"
+                  title="Upload Files"
+                >
+                  📎
+                </button>
+                <input type="file" id="chat-file-upload" multiple hidden />
+              </div>
+            </div>
+          </div>
+
+          <!-- Dashboard Tab Content -->
+          <div id="content-dashboard" class="tab-content hidden">
+            <div class="text-center mb-8">
+              <h2 class="text-3xl font-bold mb-4 gradient-text">
+                Analysis Dashboard
+              </h2>
+              <p class="text-gray-600 text-lg max-w-2xl mx-auto">
+                View recent analysis results, system statistics, and performance
+                metrics.
+              </p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div class="bg-white rounded-2xl p-6 shadow-lg">
+                <h3 class="text-xl font-semibold mb-4 text-gray-800">
+                  Recent Analyses
+                </h3>
+                <div class="space-y-3">
+                  <div class="p-3 bg-gray-50 rounded-lg">
+                    <p class="text-sm text-gray-600">No recent analyses</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="bg-white rounded-2xl p-6 shadow-lg">
+                <h3 class="text-xl font-semibold mb-4 text-gray-800">
+                  System Status
+                </h3>
+                <div class="space-y-3">
+                  <div class="flex justify-between items-center">
+                    <span class="text-gray-600">AI Models</span>
+                    <span class="text-green-600 font-semibold">Online</span>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <span class="text-gray-600">Processing Queue</span>
+                    <span class="text-blue-600 font-semibold">0</span>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <span class="text-gray-600">Uptime</span>
+                    <span class="text-gray-800 font-semibold">99.9%</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="bg-white rounded-2xl p-6 shadow-lg">
+                <h3 class="text-xl font-semibold mb-4 text-gray-800">
+                  Quick Actions
+                </h3>
+                <div class="space-y-2">
+                  <button
+                    onclick="showTab('home')"
+                    class="w-full text-left p-3 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors"
+                  >
+                    Upload New File
+                  </button>
+                  <button
+                    onclick="showTab('assistant')"
+                    class="w-full text-left p-3 bg-green-50 rounded-lg hover:bg-green-100 transition-colors"
+                  >
+                    Start Chat
+                  </button>
+                  <button
+                    onclick="showTab('reports')"
+                    class="w-full text-left p-3 bg-purple-50 rounded-lg hover:bg-purple-100 transition-colors"
+                  >
+                    View Reports
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Reports Tab Content -->
+          <div id="content-reports" class="tab-content hidden">
+            <div class="text-center mb-8">
+              <h2 class="text-3xl font-bold mb-4 gradient-text">
+                Analysis Reports
+              </h2>
+              <p class="text-gray-600 text-lg max-w-2xl mx-auto">
+                Generate and view detailed forensic analysis reports with
+                comprehensive insights.
+              </p>
+            </div>
+
+            <div class="bg-white rounded-2xl p-6 shadow-lg">
+              <div class="text-center py-12">
+                <svg
+                  class="w-16 h-16 text-gray-400 mx-auto mb-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                  ></path>
+                </svg>
+                <h3 class="text-xl font-semibold text-gray-800 mb-2">
+                  No Reports Available
+                </h3>
+                <p class="text-gray-600 mb-6">
+                  Upload files for analysis to generate detailed reports.
+                </p>
+                <button
+                  onclick="showTab('home')"
+                  class="px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-700 text-white rounded-xl font-semibold hover:shadow-lg transition-all duration-300"
+                >
+                  Start Analysis
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Features Grid -->
+      <div class="mt-16">
+        <h3 class="text-3xl font-bold text-center mb-12 gradient-text">
+          Advanced Detection Capabilities
+        </h3>
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <div
+            class="glass-effect rounded-2xl p-6 hover-lift group card-shadow"
+          >
+            <div
+              class="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-700 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300"
+            >
+              <svg
+                class="w-6 h-6 text-white"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"
+                ></path>
+              </svg>
+            </div>
+            <h4 class="text-lg font-semibold mb-2 text-gray-800">
+              rPPG Video Analysis
+            </h4>
+            <p class="text-gray-600 text-sm">
+              Detects micro pulse signals from face regions to spot deepfakes
+              with advanced physiological analysis.
+            </p>
+          </div>
+
+          <div
+            class="glass-effect rounded-2xl p-6 hover-lift group card-shadow"
+          >
+            <div
+              class="w-12 h-12 bg-gradient-to-br from-blue-600 to-blue-800 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300"
+            >
+              <svg
+                class="w-6 h-6 text-white"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                ></path>
+              </svg>
+            </div>
+            <h4 class="text-lg font-semibold mb-2 text-gray-800">
+              Image Forensics
+            </h4>
+            <p class="text-gray-600 text-sm">
+              Performs pHash, ELA, metadata checks and AI heuristics for
+              comprehensive image authenticity verification.
+            </p>
+          </div>
+
+          <div
+            class="glass-effect rounded-2xl p-6 hover-lift group card-shadow"
+          >
+            <div
+              class="w-12 h-12 bg-gradient-to-br from-blue-700 to-blue-900 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300"
+            >
+              <svg
+                class="w-6 h-6 text-white"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"
+                ></path>
+              </svg>
+            </div>
+            <h4 class="text-lg font-semibold mb-2 text-gray-800">
+              Audio Deepfake Detection
+            </h4>
+            <p class="text-gray-600 text-sm">
+              Analyzes speech patterns and cross-checks against known voices
+              using advanced anti-spoofing models.
+            </p>
+          </div>
+
+          <div
+            class="glass-effect rounded-2xl p-6 hover-lift group card-shadow"
+          >
+            <div
+              class="w-12 h-12 bg-gradient-to-br from-blue-800 to-indigo-900 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300"
+            >
+              <svg
+                class="w-6 h-6 text-white"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+                ></path>
+              </svg>
+            </div>
+            <h4 class="text-lg font-semibold mb-2 text-gray-800">
+              Blockchain Registry
+            </h4>
+            <p class="text-gray-600 text-sm">
+              Generates tamper-evident hashes for secure evidence storage and
+              provenance verification.
+            </p>
+          </div>
+
+          <!-- New Advanced Features -->
+          <div
+            class="glass-effect rounded-2xl p-6 hover-lift group card-shadow"
+          >
+            <div
+              class="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-700 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300"
+            >
+              <svg
+                class="w-6 h-6 text-white"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                ></path>
+              </svg>
+            </div>
+            <h4 class="text-lg font-semibold mb-2 text-gray-800">
+              Voice-Face Identity
+            </h4>
+            <p class="text-gray-600 text-sm">
+              Cross-verify if speaker's voice matches the detected face using
+              advanced biometric analysis.
+            </p>
+          </div>
+
+          <div
+            class="glass-effect rounded-2xl p-6 hover-lift group card-shadow"
+          >
+            <div
+              class="w-12 h-12 bg-gradient-to-br from-pink-500 to-pink-700 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300"
+            >
+              <svg
+                class="w-6 h-6 text-white"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                ></path>
+              </svg>
+            </div>
+            <h4 class="text-lg font-semibold mb-2 text-gray-800">
+              Emotion Manipulation
+            </h4>
+            <p class="text-gray-600 text-sm">
+              Detect artificially forced emotions by analyzing facial
+              expressions, voice patterns, and text sentiment.
+            </p>
+          </div>
+
+          <div
+            class="glass-effect rounded-2xl p-6 hover-lift group card-shadow"
+          >
+            <div
+              class="w-12 h-12 bg-gradient-to-br from-green-500 to-green-700 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300"
+            >
+              <svg
+                class="w-6 h-6 text-white"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                ></path>
+              </svg>
+            </div>
+            <h4 class="text-lg font-semibold mb-2 text-gray-800">
+              Explainable AI
+            </h4>
+            <p class="text-gray-600 text-sm">
+              Visual heatmaps and waveform analysis show exactly where
+              manipulations occur with detailed explanations.
+            </p>
+          </div>
+
+          <div
+            class="glass-effect rounded-2xl p-6 hover-lift group card-shadow"
+          >
+            <div
+              class="w-12 h-12 bg-gradient-to-br from-orange-500 to-orange-700 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300"
+            >
+              <svg
+                class="w-6 h-6 text-white"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                ></path>
+              </svg>
+            </div>
+            <h4 class="text-lg font-semibold mb-2 text-gray-800">
+              Fake Document Detection
+            </h4>
+            <p class="text-gray-600 text-sm">
+              Detect forged documents by analyzing fonts, alignment, metadata,
+              and digital manipulation artifacts.
+            </p>
+          </div>
+
+          <div
+            class="glass-effect rounded-2xl p-6 hover-lift group card-shadow"
+          >
+            <div
+              class="w-12 h-12 bg-gradient-to-br from-teal-500 to-teal-700 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300"
+            >
+              <svg
+                class="w-6 h-6 text-white"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+                ></path>
+              </svg>
+            </div>
+            <h4 class="text-lg font-semibold mb-2 text-gray-800">
+              Cross-Modal Consistency
+            </h4>
+            <p class="text-gray-600 text-sm">
+              Compare text descriptions with attached media to detect mismatches
+              and inconsistencies across modalities.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <footer class="mt-20 text-center">
+        <div class="glass-effect rounded-2xl p-8 max-w-4xl mx-auto card-shadow">
+          <div
+            class="flex flex-col md:flex-row items-center justify-between gap-6"
+          >
+            <div class="text-left">
+              <h4 class="text-xl font-bold gradient-text mb-2">
+                ARGUS Cyber Forensics
+              </h4>
+              <p class="text-gray-600 text-sm">
+                Advanced AI-powered deepfake detection and forensic analysis
+              </p>
+            </div>
+            <div class="flex items-center gap-4">
+              <div class="flex items-center gap-2 text-sm text-gray-600">
+                <div
+                  class="w-2 h-2 bg-green-500 rounded-full animate-pulse"
+                ></div>
+                <span>System Online</span>
+              </div>
+              <div class="text-gray-500 text-sm">
+                © 2025 ARGUS — Secure AI Detection
+              </div>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </main>
+
+    <script>
+      // Tab functionality
+      function showTab(tabName) {
+        // Hide all tab contents
+        document.querySelectorAll(".tab-content").forEach((content) => {
+          content.classList.add("hidden");
+          content.classList.remove("active");
+        });
+
+        // Remove active class from all tab buttons
+        document.querySelectorAll(".tab-button").forEach((button) => {
+          button.classList.remove("active");
+          button.classList.remove("bg-blue-500", "text-white");
+          button.classList.add("bg-gray-100", "text-gray-700");
+        });
+
+        // Show selected tab content
+        document
+          .getElementById("content-" + tabName)
+          .classList.remove("hidden");
+        document.getElementById("content-" + tabName).classList.add("active");
+
+        // Activate selected tab button
+        const activeButton = document.getElementById("tab-" + tabName);
+        activeButton.classList.add("active");
+        activeButton.classList.remove("bg-gray-100", "text-gray-700");
+        activeButton.classList.add("bg-blue-500", "text-white");
+      }
+
+      // Chat functionality
+      let session_id = "sess_" + Math.random().toString(36).slice(2, 10);
+      let mediaRecorder,
+        audioChunks = [];
+
+      function appendChatMessage(text, type = "assistant", mood = null) {
+        const chatHistory = document.getElementById("chat-history");
+        const messageDiv = document.createElement("div");
+        messageDiv.className = `chat-message ${type} mb-4`;
+
+        if (mood) {
+          const emojiMap = {
+            happy: "🙂",
+            sad: "😢",
+            angry: "😡",
+            fear: "😱",
+            neutral: "😐",
+            ended: "🛑",
+          };
+          if (emojiMap[mood]) {
+            text += " " + emojiMap[mood];
+          }
+        }
+
+        messageDiv.innerHTML = text;
+        chatHistory.appendChild(messageDiv);
+        chatHistory.scrollTop = chatHistory.scrollHeight;
+      }
+
+      // Send chat message
+      document.getElementById("send-chat").onclick = async () => {
+        const input = document.getElementById("chat-input");
+        const text = input.value.trim();
+        if (!text) return;
+
+        appendChatMessage(text, "chat-user");
+        input.value = "";
+
+        try {
+          const res = await fetch("/chat/answer", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ session_id, text }),
+          });
+          const data = await res.json();
+
+          // Enhanced sentiment analysis display
+          if (data.sentiment || data.text_emotion) {
+            const emotion = data.text_emotion || data.sentiment;
+            const sentimentEmoji = {
+              happy: "😊",
+              sad: "😢",
+              angry: "😠",
+              fear: "😨",
+              surprised: "😲",
+              neutral: "😐",
+              positive: "😊",
+              negative: "😔",
+            };
+            const emoji = sentimentEmoji[emotion] || "😐";
+
+            let analysisHTML = `
+              <div class="bg-blue-50 rounded-lg p-3 mb-3">
+                <div class="flex items-center gap-2 mb-2">
+                  <span class="text-sm font-medium text-blue-600">🧠 Emotion Analysis:</span>
+                  <span class="text-sm font-semibold">${
+                    emotion.charAt(0).toUpperCase() + emotion.slice(1)
+                  } ${emoji}</span>
+                </div>
+            `;
+
+            // Add confidence level
+            if (data.confidence) {
+              const confidenceColor =
+                data.confidence === "high"
+                  ? "text-green-600"
+                  : "text-yellow-600";
+              analysisHTML += `<div class="text-xs ${confidenceColor}">Confidence: ${data.confidence}</div>`;
+            }
+
+            analysisHTML += `</div>`;
+            appendChatMessage(analysisHTML, "chat-assistant");
+          }
+
+          // Voice stress analysis (if available)
+          if (data.voice_stress && data.voice_stress.deception_prob > 0.3) {
+            const stressLevel =
+              data.voice_stress.deception_prob > 0.7 ? "High" : "Medium";
+            const stressColor =
+              data.voice_stress.deception_prob > 0.7
+                ? "text-red-600"
+                : "text-yellow-600";
+
+            let stressHTML = `
+              <div class="bg-red-50 rounded-lg p-3 mb-3">
+                <div class="flex items-center gap-2 mb-2">
+                  <span class="text-sm font-medium text-red-600">⚠️ Voice Stress Analysis:</span>
+                  <span class="text-sm font-semibold ${stressColor}">${stressLevel} Stress Detected</span>
+                </div>
+                <div class="text-xs text-gray-600">
+                  Deception Probability: ${(
+                    data.voice_stress.deception_prob * 100
+                  ).toFixed(1)}%
+                </div>
+            `;
+
+            if (
+              data.voice_stress.indicators &&
+              data.voice_stress.indicators.length > 0
+            ) {
+              stressHTML += `<div class="text-xs text-gray-600 mt-1">
+                Indicators: ${data.voice_stress.indicators.join(", ")}
+              </div>`;
+            }
+
+            stressHTML += `</div>`;
+            appendChatMessage(stressHTML, "chat-assistant");
+          }
+
+          // Emotion manipulation detection
+          if (
+            data.emotion_manipulation &&
+            data.emotion_manipulation.is_manipulated
+          ) {
+            const manipulationHTML = `
+              <div class="bg-orange-50 rounded-lg p-3 mb-3">
+                <div class="flex items-center gap-2 mb-2">
+                  <span class="text-sm font-medium text-orange-600">🎭 Emotion Manipulation Detected:</span>
+                  <span class="text-sm font-semibold text-orange-600">Potential Inconsistency</span>
+                </div>
+                <div class="text-xs text-gray-600">
+                  Manipulation Probability: ${(
+                    data.emotion_manipulation.manipulation_prob * 100
+                  ).toFixed(1)}%
+                </div>
+                ${
+                  data.emotion_manipulation.indicators &&
+                  data.emotion_manipulation.indicators.length > 0
+                    ? `<div class="text-xs text-gray-600 mt-1">
+                    Indicators: ${data.emotion_manipulation.indicators.join(
+                      ", "
+                    )}
+                  </div>`
+                    : ""
+                }
+              </div>
+            `;
+            appendChatMessage(manipulationHTML, "chat-assistant");
+          }
+
+          // Main response
+          appendChatMessage(
+            data.next_question ||
+              data.answer ||
+              "I'm sorry, I couldn't process that request.",
+            "chat-assistant",
+            data.combined_emotion
+          );
+
+          // Behavioral insights
+          if (data.behavior_insights) {
+            appendChatMessage(`💡 ${data.behavior_insights}`, "chat-advice");
+          }
+
+          // Advice
+          if (data.advice && data.advice.length > 0) {
+            appendChatMessage(`💬 ${data.advice.join(" ")}`, "chat-advice");
+          }
+        } catch (error) {
+          appendChatMessage(
+            "I'm sorry, there was an error processing your request. Please try again.",
+            "chat-assistant"
+          );
+        }
+      };
+
+      // Voice recording
+      document.getElementById("voice-btn").onclick = async () => {
+        try {
+          const stream = await navigator.mediaDevices.getUserMedia({
+            audio: true,
+          });
+          mediaRecorder = new MediaRecorder(stream);
+          audioChunks = [];
+
+          mediaRecorder.ondataavailable = (e) => audioChunks.push(e.data);
+          mediaRecorder.start();
+
+          document.getElementById("voice-btn").innerHTML = "🔴";
+          document.getElementById("voice-btn").disabled = true;
+
+          setTimeout(() => {
+            if (mediaRecorder && mediaRecorder.state === "recording") {
+              mediaRecorder.stop();
+              document.getElementById("voice-btn").innerHTML = "🎤";
+              document.getElementById("voice-btn").disabled = false;
+            }
+          }, 3000);
+        } catch (error) {
+          appendChatMessage(
+            "❌ Microphone access denied. Please allow microphone access to use voice features.",
+            "chat-assistant"
+          );
+        }
+      };
+
+      if (typeof MediaRecorder !== "undefined") {
+        document.addEventListener("DOMContentLoaded", () => {
+          if (mediaRecorder) {
+            mediaRecorder.onstop = async () => {
+              const blob = new Blob(audioChunks, { type: "audio/wav" });
+              const fd = new FormData();
+              fd.append("session_id", session_id);
+              fd.append("audio", blob, "voice.wav");
+
+              appendChatMessage("🎤 [Voice message]", "chat-user");
+
+              try {
+                const res = await fetch("/chat/answer_audio", {
+                  method: "POST",
+                  body: fd,
+                });
+                const data = await res.json();
+
+                if (data.transcript) {
+                  appendChatMessage(
+                    `🎤 Transcribed: ${data.transcript}`,
+                    "chat-user"
+                  );
+                }
+
+                // Enhanced voice analysis display
+                if (data.audio_emotion) {
+                  const emotionEmoji = {
+                    happy: "😊",
+                    sad: "😢",
+                    angry: "😠",
+                    fear: "😨",
+                    surprised: "😲",
+                    neutral: "😐",
+                  };
+                  const emoji = emotionEmoji[data.audio_emotion] || "😐";
+
+                  const voiceAnalysisHTML = `
+                    <div class="bg-green-50 rounded-lg p-3 mb-3">
+                      <div class="flex items-center gap-2 mb-2">
+                        <span class="text-sm font-medium text-green-600">🎵 Voice Emotion Analysis:</span>
+                        <span class="text-sm font-semibold">${
+                          data.audio_emotion.charAt(0).toUpperCase() +
+                          data.audio_emotion.slice(1)
+                        } ${emoji}</span>
+                      </div>
+                      ${
+                        data.confidence
+                          ? `<div class="text-xs text-gray-600">Confidence: ${data.confidence}</div>`
+                          : ""
+                      }
+                    </div>
+                  `;
+                  appendChatMessage(voiceAnalysisHTML, "chat-assistant");
+                }
+
+                // Voice stress analysis for audio
+                if (
+                  data.voice_stress &&
+                  data.voice_stress.deception_prob > 0.3
+                ) {
+                  const stressLevel =
+                    data.voice_stress.deception_prob > 0.7 ? "High" : "Medium";
+                  const stressColor =
+                    data.voice_stress.deception_prob > 0.7
+                      ? "text-red-600"
+                      : "text-yellow-600";
+
+                  let stressHTML = `
+                    <div class="bg-red-50 rounded-lg p-3 mb-3">
+                      <div class="flex items-center gap-2 mb-2">
+                        <span class="text-sm font-medium text-red-600">⚠️ Voice Stress Analysis:</span>
+                        <span class="text-sm font-semibold ${stressColor}">${stressLevel} Stress Detected</span>
+                      </div>
+                      <div class="text-xs text-gray-600">
+                        Deception Probability: ${(
+                          data.voice_stress.deception_prob * 100
+                        ).toFixed(1)}%
+                      </div>
+                  `;
+
+                  if (
+                    data.voice_stress.indicators &&
+                    data.voice_stress.indicators.length > 0
+                  ) {
+                    stressHTML += `<div class="text-xs text-gray-600 mt-1">
+                      Indicators: ${data.voice_stress.indicators.join(", ")}
+                    </div>`;
+                  }
+
+                  stressHTML += `</div>`;
+                  appendChatMessage(stressHTML, "chat-assistant");
+                }
+
+                // Emotion manipulation detection for voice
+                if (
+                  data.emotion_manipulation &&
+                  data.emotion_manipulation.is_manipulated
+                ) {
+                  const manipulationHTML = `
+                    <div class="bg-orange-50 rounded-lg p-3 mb-3">
+                      <div class="flex items-center gap-2 mb-2">
+                        <span class="text-sm font-medium text-orange-600">🎭 Voice Manipulation Detected:</span>
+                        <span class="text-sm font-semibold text-orange-600">Potential Inconsistency</span>
+                      </div>
+                      <div class="text-xs text-gray-600">
+                        Manipulation Probability: ${(
+                          data.emotion_manipulation.manipulation_prob * 100
+                        ).toFixed(1)}%
+                      </div>
+                      ${
+                        data.emotion_manipulation.indicators &&
+                        data.emotion_manipulation.indicators.length > 0
+                          ? `<div class="text-xs text-gray-600 mt-1">
+                          Indicators: ${data.emotion_manipulation.indicators.join(
+                            ", "
+                          )}
+                        </div>`
+                          : ""
+                      }
+                    </div>
+                  `;
+                  appendChatMessage(manipulationHTML, "chat-assistant");
+                }
+
+                appendChatMessage(
+                  data.next_question,
+                  "chat-assistant",
+                  data.combined_emotion
+                );
+
+                // Behavioral insights
+                if (data.behavior_insights) {
+                  appendChatMessage(
+                    `💡 ${data.behavior_insights}`,
+                    "chat-advice"
+                  );
+                }
+
+                if (data.advice && data.advice.length > 0) {
+                  appendChatMessage(
+                    `💬 ${data.advice.join(" ")}`,
+                    "chat-advice"
+                  );
+                }
+              } catch (error) {
+                appendChatMessage(
+                  "❌ Error processing voice message. Please try again.",
+                  "chat-assistant"
+                );
+              }
+            };
+          }
+        });
+      }
+
+      // File upload for chat
+      document.getElementById("upload-chat-btn").onclick = () =>
+        document.getElementById("chat-file-upload").click();
+      document.getElementById("chat-file-upload").onchange = async () => {
+        const files = document.getElementById("chat-file-upload").files;
+        if (files.length === 0) return;
+
+        const fileNames = Array.from(files)
+          .map((f) => f.name)
+          .join(", ");
+        appendChatMessage(`📎 Uploading: ${fileNames}`, "chat-user");
+
+        try {
+          const fd = new FormData();
+          for (const f of files) fd.append("file", f);
+
+          const res = await fetch("/analyze", { method: "POST", body: fd });
+          const html = await res.text();
+
+          appendChatMessage(
+            "✅ File analysis complete — opening results in new tab.",
+            "chat-assistant"
+          );
+
+          const w = window.open("", "_blank");
+          w.document.write(html);
+          w.document.close();
+        } catch (error) {
+          appendChatMessage(
+            "❌ Error analyzing file. Please try again.",
+            "chat-assistant"
+          );
+        }
+      };
+
+      // Enhanced file chooser + preview with animations
+      const chooseBtn = document.getElementById("chooseBtn");
+      const fileUpload = document.getElementById("fileUpload");
+      const selectedFiles = document.getElementById("selectedFiles");
+
+      chooseBtn.addEventListener("click", () => {
+        fileUpload.click();
+        // Add click animation
+        chooseBtn.style.transform = "scale(0.95)";
+        setTimeout(() => {
+          chooseBtn.style.transform = "scale(1)";
+        }, 150);
+      });
+
+      fileUpload.addEventListener("change", () => {
+        const names = Array.from(fileUpload.files)
+          .map((f) => f.name)
+          .join(", ");
+        if (names) {
+          selectedFiles.innerHTML = `
+          <div class="flex items-center gap-2 text-green-400">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+            </svg>
+            <span class="font-medium">${names}</span>
+          </div>
+        `;
+        } else {
+          selectedFiles.textContent = "No file chosen";
+        }
+      });
+
+      function sendBehaviorSample(user) {
+        // Add loading animation
+        const button = event.target;
+        const originalText = button.innerHTML;
+        button.innerHTML = `
+        <svg class="w-5 h-5 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+        </svg>
+        Sending...
+      `;
+        button.disabled = true;
+
+        fetch("/behavior/sample", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            profile_id: user,
+            typing_stats: {},
+            mouse_stats: {},
+          }),
+        })
+          .then(() => {
+            button.innerHTML = `
+          <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+          </svg>
+          Sent Successfully
+        `;
+            setTimeout(() => {
+              button.innerHTML = originalText;
+              button.disabled = false;
+            }, 2000);
+          })
+          .catch(() => {
+            button.innerHTML = originalText;
+            button.disabled = false;
+          });
+      }
+
+      // Add scroll animations
+      const observerOptions = {
+        threshold: 0.1,
+        rootMargin: "0px 0px -50px 0px",
+      };
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.style.opacity = "1";
+            entry.target.style.transform = "translateY(0)";
+          }
+        });
+      }, observerOptions);
+
+      // Observe all feature cards
+      document.querySelectorAll(".glass-effect").forEach((card) => {
+        card.style.opacity = "0";
+        card.style.transform = "translateY(30px)";
+        card.style.transition = "opacity 0.6s ease, transform 0.6s ease";
+        observer.observe(card);
+      });
+    </script>
+  </body>
+</html>

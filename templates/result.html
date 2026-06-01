@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Analysis Result — ARGUS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        overflow-x: hidden;
+        font-family: "Inter", sans-serif;
+        background: #f4f7fb;
+      }
+
+      header {
+        background: white;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+        padding: 1rem 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      header h1 {
+        font-size: 1.4rem;
+        font-weight: 700;
+        color: #1e293b;
+      }
+
+      nav a {
+        text-decoration: none;
+        color: #2563eb;
+        font-weight: 500;
+        margin-left: 1rem;
+        transition: 0.3s;
+      }
+
+      nav a:hover {
+        color: #1d4ed8;
+      }
+
+      main {
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        gap: 2rem;
+        flex-wrap: wrap;
+        width: 100%;
+        max-width: 1400px;
+        margin: 2rem auto;
+        padding: 1rem;
+        box-sizing: border-box;
+      }
+
+      .left-panel {
+        flex: 1 1 55%;
+        background: #fff;
+        border-radius: 16px;
+        padding: 1.5rem;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      }
+
+      .right-panel {
+        flex: 1 1 35%;
+        background: #fff;
+        border-radius: 16px;
+        padding: 1.5rem;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        min-height: 400px;
+      }
+
+      h2,
+      h3 {
+        color: #1e293b;
+        margin-bottom: 0.75rem;
+      }
+
+      p {
+        color: #475569;
+        line-height: 1.5;
+      }
+
+      .card {
+        background: #f9fafb;
+        border-radius: 12px;
+        padding: 1rem;
+        box-shadow: 0 1px 5px rgba(0, 0, 0, 0.05);
+        margin-bottom: 1rem;
+      }
+
+      img,
+      canvas {
+        width: 100%;
+        max-width: 100%;
+        border-radius: 12px;
+        display: block;
+      }
+
+      .metric-card {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: #f1f5f9;
+        border-radius: 10px;
+        padding: 0.75rem 1rem;
+        margin-bottom: 1rem;
+        box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.05);
+      }
+
+      .metric-card span {
+        font-weight: 600;
+        color: #1e293b;
+      }
+
+      button,
+      .download-btn {
+        background: #2563eb;
+        color: white;
+        padding: 0.6rem 1.2rem;
+        border-radius: 8px;
+        border: none;
+        font-weight: 500;
+        cursor: pointer;
+        transition: 0.3s ease;
+      }
+
+      button:hover,
+      .download-btn:hover {
+        background: #1d4ed8;
+        transform: translateY(-2px);
+      }
+
+      @media (max-width: 1024px) {
+        main {
+          flex-direction: column;
+          align-items: center;
+        }
+
+        .left-panel,
+        .right-panel {
+          width: 90%;
+        }
+      }
+
+      @media (max-width: 768px) {
+        header {
+          flex-direction: column;
+          align-items: flex-start;
+          padding: 1rem;
+        }
+
+        nav {
+          margin-top: 0.5rem;
+        }
+
+        main {
+          gap: 1rem;
+        }
+
+        .left-panel,
+        .right-panel {
+          padding: 1rem;
+        }
+
+        button,
+        .download-btn {
+          width: 100%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="bg-white/90 backdrop-blur-md sticky top-0 shadow-sm z-50">
+      <div
+        class="max-w-7xl mx-auto px-6 py-4 flex flex-col md:flex-row justify-between items-center gap-4 md:gap-0"
+      >
+        <div class="flex items-center gap-3">
+          <img
+            src="{{ url_for('static', filename='logo.png') }}"
+            class="w-12 h-12 rounded-xl shadow-lg"
+          />
+          <div>
+            <h1 class="text-2xl font-bold text-blue-600">ARGUS</h1>
+            <p class="text-sm text-gray-600">Analysis Result</p>
+          </div>
+        </div>
+        <nav class="flex items-center gap-6 text-gray-700 flex-wrap">
+          <a href="/" class="hover:text-blue-600">Home</a>
+          <a href="/chat" class="hover:text-blue-600">AI Assistant</a>
+          <a href="/dashboard" class="hover:text-blue-600">Dashboard</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto p-6 grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <!-- LEFT PANEL -->
+      <section class="bg-white p-6 rounded-2xl shadow-lg flex flex-col">
+        <h2 class="text-xl font-bold mb-3">
+          Uploaded {{ result.file_type|capitalize }}
+        </h2>
+
+        {% if result.thumbnail %}
+        <img
+          src="{{ result.thumbnail }}"
+          class="thumb w-full mb-4 object-contain max-h-96"
+        />
+        {% else %}
+        <p class="text-gray-500">No uploaded file available</p>
+        {% endif %}
+
+        <div class="grid grid-cols-2 gap-4">
+          <div class="metric-card">
+            <p class="text-sm text-gray-500">AI Probability</p>
+            <p class="text-2xl font-bold">
+              {{ result.ai_prob|default(0)|round(1) }}%
+            </p>
+          </div>
+          <div class="metric-card">
+            <p class="text-sm text-gray-500">Combined Score</p>
+            <p class="text-2xl font-bold">
+              {{ result.score|default(0)|round(2) }}
+            </p>
+          </div>
+        </div>
+
+        {% if result.file_type == 'image' %}
+        <div class="mt-6">
+          <h3 class="font-semibold text-lg mb-3 text-gray-800">
+            Image Metrics
+          </h3>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="metric-card">
+              <p class="text-sm text-gray-500">Sharpness</p>
+              <p class="text-xl font-semibold">
+                {{ result.sharpness|default(0)|round(2) }}
+              </p>
+            </div>
+            <div class="metric-card">
+              <p class="text-sm text-gray-500">High Freq Energy</p>
+              <p class="text-xl font-semibold">
+                {{ result.high_freq_energy|default(0)|round(2) }}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {% if result.faces %}
+        <div class="mt-6">
+          <h3 class="font-semibold text-lg text-gray-800 mb-2">
+            Detected Faces ({{ result.face_count|default(0) }})
+          </h3>
+          <div class="faces-scroll flex overflow-x-auto">
+            {% for f in result.faces %}
+            <img src="{{ f.crop }}" alt="face {{ loop.index }}" />
+            {% endfor %}
+          </div>
+        </div>
+        {% endif %} {% if result.faces_boxed %}
+        <div class="mt-6">
+          <h3 class="font-semibold text-lg mb-2 text-gray-800">
+            Annotated Detection
+          </h3>
+          <img
+            src="{{ result.faces_boxed }}"
+            class="rounded-xl shadow-md w-full object-contain"
+          />
+        </div>
+        {% endif %} {% if result.heatmap_image %}
+        <div class="mt-6">
+          <h3 class="font-semibold text-lg mb-2 text-gray-800">
+            Forgery Heatmap
+          </h3>
+          <img
+            src="{{ result.heatmap_image }}"
+            class="rounded-xl shadow-md w-full object-contain"
+          />
+        </div>
+        {% endif %} {% if result.heatmap_overlay %}
+        <div class="mt-6">
+          <h3 class="font-semibold text-lg mb-2 text-gray-800">
+            Heatmap Overlay
+          </h3>
+          <img
+            src="{{ result.heatmap_overlay }}"
+            class="rounded-xl shadow-md w-full object-contain"
+          />
+        </div>
+        {% endif %} {% endif %} {% if result.file_type == 'video' %}
+        <div class="mt-6">
+          <h3 class="font-semibold text-lg mb-2 text-gray-800">
+            Frame-by-Frame Authenticity
+          </h3>
+          <canvas id="videoChart" class="w-full" height="120"></canvas>
+        </div>
+        {% endif %} {% if result.file_type == 'document' %}
+        <div class="mt-6">
+          <h3 class="font-semibold text-lg mb-2 text-gray-800">
+            Document Analysis
+          </h3>
+          {% if result.text_tamper is defined %}
+          <p>
+            <b>Text Tampering:</b> {{ 'Yes' if result.text_tamper else 'No' }}
+          </p>
+          {% endif %} {% if result.metadata_tamper is defined %}
+          <p>
+            <b>Metadata Tampering:</b> {{ 'Yes' if result.metadata_tamper else
+            'No' }}
+          </p>
+          {% endif %} {% if result.ocr_text %}
+          <pre
+            class="bg-gray-50 rounded-md p-3 text-sm mt-2 text-gray-700 overflow-x-auto"
+          >
+{{ result.ocr_text }}</pre
+          >
+          {% endif %}
+        </div>
+        {% endif %}
+      </section>
+
+      <!-- RIGHT PANEL -->
+      <section class="bg-white p-6 rounded-2xl shadow-lg flex flex-col">
+        <h2 class="text-xl font-bold mb-3">AI Analysis Summary</h2>
+        <div id="ai-summary" class="ai-box flex-1 overflow-auto">
+          {{ result.summary|default("No summary available") }}
+        </div>
+
+        <div class="mt-6">
+          <h3 class="font-semibold text-lg mb-2 text-gray-800">
+            Analysis Explanation
+          </h3>
+          <p class="text-gray-700">
+            {{ result.explanation|default("No explanation available") }}
+          </p>
+        </div>
+
+        <div class="mt-6">
+          <h3 class="font-semibold text-lg mb-2 text-gray-800">
+            Real-time AI Probability Gauge
+          </h3>
+          <canvas id="aiGauge" class="w-full" height="120"></canvas>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+          // Typing animation for summary
+          const el = document.getElementById("ai-summary");
+          const text = {{ (result.summary|default("No summary available"))|tojson|safe }};
+          let i = 0;
+          function type(){ if(i<text.length){ el.textContent+=text.charAt(i); i++; setTimeout(type,25);} }
+          type();
+
+          // Video chart
+          {% if result.file_type == 'video' and result.frame_scores %}
+          const vctx = document.getElementById("videoChart");
+          new Chart(vctx,{
+              type:'line',
+              data:{
+                  labels: {{ result.frame_labels|default([])|tojson|safe }},
+                  datasets:[{
+                      label:'Frame Authenticity',
+                      data: {{ result.frame_scores|default([])|tojson|safe }},
+                      borderColor:'#3b82f6',
+                      backgroundColor:'rgba(59,130,246,0.2)',
+                      tension:0.3, fill:true
+                  }]
+              },
+              options:{ scales:{ y:{ beginAtZero:true, max:1 } } }
+          });
+          {% endif %}
+
+          // AI probability gauge
+          const gaugeCtx = document.getElementById("aiGauge");
+          new Chart(gaugeCtx, {
+              type: 'doughnut',
+              data: {
+                  labels: ['AI Probability','Remaining'],
+                  datasets: [{
+                      data: [{{ result.ai_prob|default(0)|round(2) }}, 100-{{ result.ai_prob|default(0)|round(2) }}],
+                      backgroundColor: ['#ef4444','#e5e7eb'],
+                      borderWidth: 0
+                  }]
+              },
+              options: { rotation: -90, circumference: 180, cutout: '70%', plugins: { legend:{ display:false } } }
+          });
+      });
+    </script>
+  </body>
+</html>
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Analysis Result — ARGUS</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+* { font-family: "Inter", sans-serif; }
+body { background: radial-gradient(circle at top left, #eef2ff, #f8fafc); min-height: 100vh; margin: 0; }
+.thumb { border-radius: 16px; box-shadow: 0 12px 24px rgba(0,0,0,0.2); transition: transform 0.3s; }
+.thumb:hover { transform: scale(1.02); }
+.faces-scroll img { width: 80px; height: 80px; border-radius: 12px; margin-right: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+.metric-card { background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 1rem; text-align: center; }
+.status-badge { display: inline-block; padding: 8px 16px; border-radius: 20px; font-weight: 600; margin-top: 8px; }
+.status-authentic { background: rgba(34,197,94,0.2); color: #22c55e; }
+.status-suspicious { background: rgba(245,158,11,0.2); color: #f59e0b; }
+.status-fake { background: rgba(239,68,68,0.2); color: #ef4444; }
+.ai-box { background: rgba(0,0,0,0.75); color: #e0f2fe; border-left: 4px solid #60a5fa; padding: 1rem; border-radius: 8px; margin-top: 1rem; white-space: pre-wrap; }
+.download-btn { background: #3b82f6; color: white; padding: 0.5rem 1rem; border-radius: 8px; font-weight: 600; text-decoration: none; margin-top: 0.5rem; display: inline-block; }
+.download-btn:hover { background: #2563eb; }
+</style>
+</head>
+<body>
+<header class="bg-white/90 backdrop-blur-md sticky top-0 shadow-sm">
+<div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+<div class="flex items-center gap-3">
+<img src="{{ url_for('static', filename='logo.png') }}" class="w-12 h-12 rounded-xl shadow-lg" />
+<div>
+<h1 class="text-2xl font-bold text-blue-600">ARGUS</h1>
+<p class="text-sm text-gray-600">Analysis Result</p>
+</div>
+</div>
+<nav class="flex items-center gap-6 text-gray-700">
+<a href="/" class="hover:text-blue-600">Home</a>
+<a href="/chat" class="hover:text-blue-600">AI Assistant</a>
+<a href="/dashboard" class="hover:text-blue-600">Dashboard</a>
+</nav>
+</div>
+</header>
+
+<main class="max-w-7xl mx-auto p-6 grid md:grid-cols-2 gap-8">
+<section class="bg-white p-6 rounded-2xl shadow-lg">
+<h2 class="text-xl font-bold mb-3">Uploaded {{ result.file_type|capitalize }}</h2>
+
+{% if result.thumbnail %}
+<img src="{{ result.thumbnail }}" class="thumb w-full mb-4" />
+{% else %}
+<p class="text-gray-500">No uploaded file available</p>
+{% endif %}
+
+{% if result.ai_prob is defined %}
+{% if result.ai_prob < 20 %}
+<span class="status-badge status-authentic">Authentic</span>
+{% elif result.ai_prob < 60 %}
+<span class="status-badge status-suspicious">Suspicious</span>
+{% else %}
+<span class="status-badge status-fake">Fake</span>
+{% endif %}
+{% endif %}
+
+<div class="grid grid-cols-2 gap-4 mt-4">
+<div class="metric-card">
+<p class="text-sm text-gray-500">AI Probability</p>
+<p class="text-2xl font-bold">{{ result.ai_prob|default(0)|round(1) }}%</p>
+</div>
+<div class="metric-card">
+<p class="text-sm text-gray-500">Combined Score</p>
+<p class="text-2xl font-bold">{{ result.score|default(0)|round(2) }}</p>
+</div>
+</div>
+
+{% if result.file_type == 'image' %}
+<div class="mt-6">
+<h3 class="font-semibold text-lg mb-3 text-gray-800">Image Metrics</h3>
+<div class="grid grid-cols-2 gap-4">
+<div class="metric-card"><p class="text-sm text-gray-500">Sharpness</p><p class="text-xl font-semibold">{{ result.sharpness|default(0)|round(2) }}</p></div>
+<div class="metric-card"><p class="text-sm text-gray-500">High Freq Energy</p><p class="text-xl font-semibold">{{ result.high_freq_energy|default(0)|round(2) }}</p></div>
+</div>
+</div>
+
+{% if result.faces %}
+<div class="mt-6">
+<h3 class="font-semibold text-lg text-gray-800 mb-2">Detected Faces ({{ result.face_count|default(0) }})</h3>
+<div class="faces-scroll flex overflow-x-auto">
+{% for f in result.faces %}
+<img src="{{ f.crop }}" alt="face {{ loop.index }}">
+{% endfor %}
+</div>
+</div>
+{% endif %}
+
+{% if result.faces_boxed %}
+<div class="mt-6">
+<h3 class="font-semibold text-lg mb-2 text-gray-800">Annotated Detection</h3>
+<img src="{{ result.faces_boxed }}" class="rounded-xl shadow-md w-full">
+</div>
+{% endif %}
+
+{% if result.heatmap_image %}
+<div class="mt-6">
+<h3 class="font-semibold text-lg mb-2 text-gray-800">Forgery Heatmap</h3>
+<img src="{{ result.heatmap_image }}" class="rounded-xl shadow-md w-full">
+</div>
+{% endif %}
+
+{% if result.heatmap_overlay %}
+<div class="mt-6">
+<h3 class="font-semibold text-lg mb-2 text-gray-800">Heatmap Overlay</h3>
+<img src="{{ result.heatmap_overlay }}" class="rounded-xl shadow-md w-full">
+</div>
+{% endif %}
+
+{% endif %}
+
+{% if result.file_type == 'video' %}
+<div class="mt-6">
+<h3 class="font-semibold text-lg mb-2 text-gray-800">Frame-by-Frame Authenticity</h3>
+<canvas id="videoChart" height="120"></canvas>
+</div>
+{% endif %}
+
+{% if result.file_type == 'document' %}
+<div class="mt-6">
+<h3 class="font-semibold text-lg mb-2 text-gray-800">Document Analysis</h3>
+{% if result.text_tamper is defined %}<p><b>Text Tampering:</b> {{ 'Yes' if result.text_tamper else 'No' }}</p>{% endif %}
+{% if result.metadata_tamper is defined %}<p><b>Metadata Tampering:</b> {{ 'Yes' if result.metadata_tamper else 'No' }}</p>{% endif %}
+{% if result.ocr_text %}
+<pre class="bg-gray-50 rounded-md p-3 text-sm mt-2 text-gray-700 overflow-x-auto">{{ result.ocr_text }}</pre>
+<a href="{{ url_for('download_ocr', filename=result.filename) }}" class="download-btn">Download OCR Text</a>
+{% endif %}
+{% if result.preview_image %}
+<a href="{{ result.preview_image }}" download class="download-btn">Download Preview Image</a>
+{% endif %}
+</div>
+{% endif %}
+</section>
+
+<section class="bg-white p-6 rounded-2xl shadow-lg">
+<h2 class="text-xl font-bold mb-3">AI Analysis Summary</h2>
+<div id="ai-summary" class="ai-box">{{ result.summary|default("No summary available") }}</div>
+
+<div class="mt-6">
+<h3 class="font-semibold text-lg mb-2 text-gray-800">Analysis Explanation</h3>
+<p class="text-gray-700">{{ result.explanation|default("No explanation available") }}</p>
+</div>
+
+<div class="mt-6">
+<h3 class="font-semibold text-lg mb-2 text-gray-800">Real-time AI Probability Gauge</h3>
+<canvas id="aiGauge" height="120"></canvas>
+</div>
+</section>
+</main>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    // Typing animation for explanation
+    const el = document.getElementById("ai-summary");
+    const text = {{ (result.summary|default("No summary available"))|tojson|safe }};
+    let i = 0; function type(){ if(i<text.length){ el.textContent+=text.charAt(i); i++; setTimeout(type,25);} }
+    type();
+
+    // Video chart
+    {% if result.file_type == 'video' and result.frame_scores %}
+    const vctx = document.getElementById("videoChart");
+    new Chart(vctx,{
+        type:'line',
+        data:{
+            labels: {{ result.frame_labels|default([])|tojson|safe }},
+            datasets:[{
+                label:'Frame Authenticity',
+                data: {{ result.frame_scores|default([])|tojson|safe }},
+                borderColor:'#3b82f6',
+                backgroundColor:'rgba(59,130,246,0.2)',
+                tension:0.3, fill:true
+            }]
+        },
+        options:{ scales:{ y:{ beginAtZero:true, max:1 } } }
+    });
+    {% endif %}
+
+    // Real-time AI probability gauge
+    const gaugeCtx = document.getElementById("aiGauge");
+    new Chart(gaugeCtx, {
+        type: 'doughnut',
+        data: {
+            labels: ['AI Probability','Remaining'],
+            datasets: [{
+                data: [{{ result.ai_prob|default(0)|round(2) }}, 100-{{ result.ai_prob|default(0)|round(2) }}],
+                backgroundColor: ['#ef4444','#e5e7eb'],
+                borderWidth: 0
+            }]
+        },
+        options: {
+            rotation: -90,
+            circumference: 180,
+            cutout: '70%',
+            plugins: { legend:{ display:false } }
+        }
+    });
+
+});
+</script>
+</body>
+</html> -->

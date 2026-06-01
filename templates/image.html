@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ARGUS — Image Detection</title>
+  <link rel="stylesheet" href="/static/main.css">
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; background: #f9fafb; }
+    .container { max-width: 900px; margin: 20px auto; padding: 20px; background: #fff;
+                 border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+    h1 { margin-bottom: 20px; }
+    .upload-box { border: 2px dashed #ccc; padding: 30px; text-align: center; border-radius: 10px; cursor: pointer; }
+    .upload-box:hover { background: #f1f1f1; }
+    #preview { margin-top: 20px; text-align: center; }
+    #preview img { max-width: 300px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+    #result { margin-top: 20px; display: none; }
+    .metric { display: inline-block; margin: 8px; padding: 12px; background: #f4f4f4;
+              border-radius: 8px; min-width: 100px; text-align: center; }
+    .faces { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 15px; }
+    .faces img { width: 100px; height: 100px; object-fit: cover; border-radius: 6px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>ARGUS — Image Detection</h1>
+
+    <form id="uploadForm">
+      <div class="upload-box" onclick="document.getElementById('fileInput').click()">
+        <p>Click or Drag an Image to Upload</p>
+        <input type="file" id="fileInput" name="file" accept="image/*" hidden>
+      </div>
+      <button type="submit" style="margin-top:20px;">Analyze</button>
+    </form>
+
+    <div id="preview"></div>
+
+    <div id="result">
+      <h2>Analysis Result</h2>
+      <div id="metrics"></div>
+      <h3>Faces Detected</h3>
+      <div class="faces" id="faces"></div>
+      <h3>Heatmap</h3>
+      <div id="heatmap"></div>
+      <h3>Explanation</h3>
+      <p id="explanation"></p>
+    </div>
+  </div>
+
+  <script>
+    const fileInput = document.getElementById("fileInput");
+    const preview = document.getElementById("preview");
+    const form = document.getElementById("uploadForm");
+    const resultBox = document.getElementById("result");
+
+    fileInput.addEventListener("change", () => {
+      const file = fileInput.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = e => {
+          preview.innerHTML = `<img src="${e.target.result}" alt="preview">`;
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const file = fileInput.files[0];
+      if (!file) return alert("Please select an image!");
+
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const res = await fetch("/analyze/image", { method: "POST", body: formData });
+      const data = await res.json();
+
+      // Show results
+      resultBox.style.display = "block";
+      document.getElementById("metrics").innerHTML = `
+        <div class="metric">AI Prob<br><b>${(data.ai_prob*100).toFixed(1)}%</b></div>
+        <div class="metric">Score<br><b>${data.score.toFixed(2)}</b></div>
+        <div class="metric">Sharpness<br><b>${data.sharpness.toFixed(1)}</b></div>
+        <div class="metric">HF Energy<br><b>${data.high_freq_energy.toFixed(1)}</b></div>
+      `;
+
+      const faces = document.getElementById("faces");
+      faces.innerHTML = "";
+      if (data.faces && data.faces.length) {
+        data.faces.forEach(f => {
+          faces.innerHTML += `<img src="${f.crop}">`;
+        });
+      } else {
+        faces.innerHTML = "<p>No faces detected.</p>";
+      }
+
+      document.getElementById("heatmap").innerHTML = data.heatmap_overlay
+        ? `<img src="${data.heatmap_overlay}" style="max-width:100%;border-radius:8px;">`
+        : "<p>No heatmap available.</p>";
+
+      document.getElementById("explanation").textContent = data.explanation || "No explanation.";
+    });
+  </script>
+</body>
+</html>
